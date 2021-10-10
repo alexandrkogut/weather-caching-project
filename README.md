@@ -4,7 +4,7 @@
 Docker, Nginx, PHP 8, Symfony 5, PostgreSQL, Redis
 ````
 
-[Weather API](http://bulk.openweathermap.org/sample/city.list.json.gz)  
+[Weather API](https://openweathermap.org/api)  
 [Available cities](http://bulk.openweathermap.org/sample/city.list.json.gz)
 
 ## Install
