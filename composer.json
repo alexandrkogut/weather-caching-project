@@ -1,7 +1,7 @@
 {
     "type": "project",
-    "name": "pet/redis-caching-project",
-    "description": "Redis caching",
+    "name": "alexandrkogut/redis-caching-project",
+    "description": "Data caching with Redis",
     "version": "1.0.0",
     "license": "proprietary",
     "minimum-stability": "stable",
