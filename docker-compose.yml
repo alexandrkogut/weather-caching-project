@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis-chaching-project-redis
+    command:
+      - 'redis-server'
+#      - '--loglevel ${REDIS_LOGLEVEL:-warning}'
+#      - '--databases 2'
+      - '--maxmemory ${REDIS_MAXMEM:-50mb}'
+#      - '--maxmemory-policy ${REDIS_POLICY:-noeviction}'
+      - '--requirepass ${REDIS_PASSWORD}'
+    networks:
+      - work-network
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:12
+    container_name: redis-chaching-project-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=redis-chaching-project
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - work-network
+    ports:
+      - "5432:5432"
+
+  php:
+    container_name: redis-chaching-project-php
+    build:
+      context: ./.docker/php
+    volumes:
+      - ./:/var/www/server
+      - ./var/log:/var/www/server/var/log
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - work-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: redis-chaching-project-nginx
+    volumes:
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./var/log/nginx/:/var/log/nginx
+    depends_on:
+      - php
+    networks:
+      - work-network
+    ports:
+      - "80:80"
+      - "443:443"
+
+volumes:
+  db-data:
+    name: redis-chaching-project-db-data
+
+networks:
+  work-network:
+    name: redis-chaching-project-network
